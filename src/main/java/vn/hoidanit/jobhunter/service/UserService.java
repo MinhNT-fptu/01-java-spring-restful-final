@@ -21,4 +21,9 @@ public class UserService {
         return this.userRepository.save(user);
     }
 
+    // xử lý logic xóa user theo id
+    public void handleDeleteUserById(long id) {
+        this.userRepository.deleteById(id);
+    }
+
 }

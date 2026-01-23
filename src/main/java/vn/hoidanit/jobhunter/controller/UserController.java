@@ -1,6 +1,8 @@
 package vn.hoidanit.jobhunter.controller;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import vn.hoidanit.jobhunter.domain.User;
@@ -21,12 +23,20 @@ public class UserController {
 
     // @GetMapping("/user/create") // tạo endpoint(API), http method: GET, path:
     // /user/create
-    @PostMapping("/user/create")
-    public User createNewUser(
-            @RequestBody User postManUser) {
+    @PostMapping("/user")
+    public User createNewUser(@RequestBody User postManUser) {// JACKSON tự động map JSON từ body request thành object
+                                                              // User(POJO)
 
         User ryanUser = this.userService.handleCreateUser(postManUser);
 
         return ryanUser;
+    }
+
+    @DeleteMapping("/user/{id}") // truyền động qua path
+    public String deleteUserById(@PathVariable("id") long id) { // map path variable vào tham số id
+
+        this.userService.handleDeleteUserById(id);
+
+        return "delete success";
     }
 }
