@@ -17,8 +17,8 @@ public class UserService {
     }
 
     // xử lý logic tạo user
-    public void handleCreateUser(User user) {
-        this.userRepository.save(user);
+    public User handleCreateUser(User user) {
+        return this.userRepository.save(user);
     }
 
 }

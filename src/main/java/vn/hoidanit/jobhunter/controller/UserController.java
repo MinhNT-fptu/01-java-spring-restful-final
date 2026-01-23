@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.service.UserService;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 //@Controller → thường dùng cho web MVC + view (JSP/HTML)
 @RestController // dùng cho API trả JSON/text
@@ -17,16 +19,14 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/user/create") // tạo endpoint(API), http method: GET, path: /user/create
-    public String createNewUser() {
+    // @GetMapping("/user/create") // tạo endpoint(API), http method: GET, path:
+    // /user/create
+    @PostMapping("/user/create")
+    public User createNewUser(
+            @RequestBody User postManUser) {
 
-        User user = new User();
-        user.setEmail("ntminh1302@gmail.com");
-        user.setName("Ryan");
-        user.setPassword("123456");
+        User ryanUser = this.userService.handleCreateUser(postManUser);
 
-        this.userService.handleCreateUser(user);
-
-        return "Create new user";
+        return ryanUser;
     }
 }
