@@ -3,11 +3,15 @@ package vn.hoidanit.jobhunter.controller;
 import java.util.Optional;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.micrometer.core.ipc.http.HttpSender.Response;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.service.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,43 +30,49 @@ public class UserController {
         this.userService = userService;
     }
 
-    // @GetMapping("/user/create") // tạo endpoint(API), http method: GET, path:
-    // /user/create
-    @PostMapping("/user")
-    public User createNewUser(@RequestBody User postManUser) {// JACKSON tự động map JSON từ body request thành object
-                                                              // User(POJO)
+    // @GetMapping("/users/create") // tạo endpoint(API), http method: GET, path:
+    // /users/create
+    @PostMapping("/users")
+    public ResponseEntity<User> createNewUser(@RequestBody User postManUser) {// JACKSON tự động map JSON từ body
+                                                                              // request thành object
+        // User(POJO)
 
         User ryanUser = this.userService.handleCreateUser(postManUser);
 
-        return ryanUser;
+        return ResponseEntity.status(HttpStatus.CREATED).body(ryanUser);
+
     }
 
-    @DeleteMapping("/user/{id}") // truyền động qua path
-    public String deleteUserById(@PathVariable("id") long id) { // map path variable vào tham số id
+    @DeleteMapping("/users/{id}") // truyền động qua path
+
+    // nếu không muốn trả dữ liệu cho generic thành void
+    public ResponseEntity<Void> deleteUserById(@PathVariable("id") long id) { // map path variable vào tham số id
 
         this.userService.handleDeleteUserById(id);
 
-        return "delete success";
+        // return ResponseEntity.ok("Delete user successfully"); // cách viết ngắn hơn
+        return ResponseEntity.noContent().build(); // Quốc Tế: delete trả về mã lỗi 204
+        // return ResponseEntity.status(HttpStatus.OK).body("Delete user successfully");
     }
 
-    @GetMapping("/user/{id}")
-    public User getUserById(@PathVariable("id") long id) {
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable("id") long id) {
 
         // Optional<User> user = this.userService.handleGetUserById(id);
         User user = this.userService.fetchUserById(id);
 
-        return user;
+        return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/user")
-    public List<User> getAllUsers() { // lấy tất cả user java tự convert List<User> thành JSON array
-        return this.userService.fetchAllUsers();
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUsers() { // lấy tất cả user java tự convert List<User> thành JSON array
+        return ResponseEntity.ok(this.userService.fetchAllUsers());
     }
 
-    @PutMapping("/user")
-    public User updateUserById(@RequestBody User updateUser) {
+    @PutMapping("/users")
+    public ResponseEntity<User> updateUserById(@RequestBody User updateUser) {
         User updatedUser = this.userService.handleUpdateUser(updateUser);
-        return updatedUser;
+        return ResponseEntity.ok(updatedUser);
     }
 
 }
