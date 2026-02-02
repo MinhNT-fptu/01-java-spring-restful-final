@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,19 +30,24 @@ public class UserController {
     // UserController inject UserService (DI)
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // @GetMapping("/users/create") // tạo endpoint(API), http method: GET, path:
     // /users/create
     @PostMapping("/users")
-    public ResponseEntity<User> createNewUser(@RequestBody User postManUser) {// JACKSON tự động map JSON từ body
-                                                                              // request thành object
+    public ResponseEntity<User> createNewUser(@RequestBody User postManUser) {
+        // JACKSON tự động map JSON từ body
+        // request thành object
         // User(POJO)
+        String hashPassword = this.passwordEncoder.encode(postManUser.getPassword()); // tạo mã hóa mk
+        postManUser.setPassword(hashPassword); // ghi đè lại mk
 
         User ryanUser = this.userService.handleCreateUser(postManUser);
-
         return ResponseEntity.status(HttpStatus.CREATED).body(ryanUser);
 
     }
