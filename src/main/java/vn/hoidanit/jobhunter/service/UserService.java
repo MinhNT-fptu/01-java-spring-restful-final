@@ -51,4 +51,9 @@ public class UserService {
         }
         return user;
     }
+
+    // xử lý logic lấy user by email
+    public User handleGetUserByUsername(String username) {
+        return this.userRepository.findByEmail(username);
+    }
 }

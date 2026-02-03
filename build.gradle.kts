@@ -23,7 +23,8 @@ dependencies { //sư dụng thư viện nào
 	implementation("org.springframework.boot:spring-boot-starter-validation") //validate dữ liệu
 	implementation("org.springframework.boot:spring-boot-starter-web")//web
 	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6")
-	developmentOnly("org.springframework.boot:spring-boot-devtools") 
+	developmentOnly("org.springframework.boot:spring-boot-devtools")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 	runtimeOnly("com.mysql:mysql-connector-j") //kết nối mysql
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.security:spring-security-test")
